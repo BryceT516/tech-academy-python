@@ -12,7 +12,7 @@ def mouse_press(event):
     global prev
     prev = event
     print('type: {}'.format(event.type))
-    print('wdiget: {}'.format(event.widget))
+    print('widget: {}'.format(event.widget))
     print('num: {}'.format(event.num))
     print('x: {}'.format(event.x))
     print('y: {}'.format(event.y))
