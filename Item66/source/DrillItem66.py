@@ -110,24 +110,20 @@ class FileCopier:
             copyCount = 0
 
             for files in itemList:
-                if(files.endswith(".txt")):
-                    print(currentPath + files)
-                    lastCopiedTime = self.db.getLastCopyDate(files, currentDir)
-                    if(not isinstance(lastCopiedTime,datetime)):
-                        #File hasn't been copied before
+                print(currentPath + files)
+                lastCopiedTime = self.db.getLastCopyDate(files, currentDir)
+                if(not isinstance(lastCopiedTime,datetime)):
+                    #File hasn't been copied before
+                    shutil.copy2(currentPath + files, self.destination.get())
+                    copyCount = copyCount + 1
+                    self.db.updateCopyDate(files, currentDir)
+                else:
+                    lastModTime = datetime.fromtimestamp(os.path.getmtime(currentPath + files))
+                    
+                    if (lastCopiedTime < lastModTime):
                         shutil.copy2(currentPath + files, self.destination.get())
                         copyCount = copyCount + 1
                         self.db.updateCopyDate(files, currentDir)
-                    else:
-                        lastModTime = datetime.fromtimestamp(os.path.getmtime(currentPath + files))
-                        
-                        if (lastCopiedTime < lastModTime):
-                            shutil.copy2(currentPath + files, self.destination.get())
-                            copyCount = copyCount + 1
-                            self.db.updateCopyDate(files, currentDir)
-                else:
-                    #file is not a text file, so ignore it.
-                    pass
             
             print ( str(copyCount) + " files copied")
             self.populateTreeview()
